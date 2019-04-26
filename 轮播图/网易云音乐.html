@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body,ul{
+            margin: 0px;
+        }
+        ul{
+            padding-left: 0px;
+            list-style: none;
+        }
+        .content{
+            width: 900px;
+            height: 331px;
+            margin: 80px auto 0;
+            position: relative;
+        }
+        .imgList{
+            width: 900px;
+            height: 300px;
+        }
+        .line{
+            width: 900px;
+            height: 31px;
+            text-align: center;
+        }
+        .btnLeft,.btnRight{
+            position: absolute;
+            width: 30px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.4);
+            font-size: 24px;
+            /* 水平居中 */
+            text-align: center;
+            /* 垂直居中 */
+            line-height: 50px;
+            z-index: 3;
+            cursor: pointer;
+        }
+        .btnLeft{
+            /* 盒子最顶部在父元素div盒子的一半，再向上偏25 */
+            top: 50%;
+            margin-top: -25px;
+            left:0px;
+        }
+        .btnRight{
+            top: 50%;
+            margin-top: -25px;
+            right: 0px;
+        }
+        .imgList>ul{
+            position: relative;
+            /* 超出部分全部隐藏 */
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+
+        }
+        .imgList>ul>li{
+            width: 500px;
+            height: 300px;
+            position: absolute;
+        }
+        img {
+            width: 500px;
+            height: 300px;
+        }
+        .list1{
+            z-index: 1;
+            /* 扩大0.8倍 */
+             transform: scale(0.8); 
+            /* 改变变化圆点的位置 */
+            transform-origin: 0% 100%; 
+            transition: 0.5s;
+        }
+        .list2{
+           transform: translateX(200px);
+           z-index: 2; 
+           transition: 0.5s;
+        }
+        .list3{
+            
+            z-index: 1;
+            transform-origin: 100% 100% ;
+            /* 为什么现在把两者放在起一写？因为不准出现相同的两个样式引起冲突 */
+            transform: translatex(500px) scale(0.8);
+            transition: 0.5s;
+        }
+        .list4{
+            transform-origin: 100% 100% ;
+            transform: translateX(700px) scale(0.8);
+            transition: 0.5s;
+        }
+        .list5{
+            transform-origin: 100% 100% ;
+            transform: translateX(1100px) scale(0.8);
+            transition: 0.5s;
+        }
+        .list6{
+            transform-origin: 100% 100% ;
+            transform: translateX(1300px) scale(0.8);
+            /* transition: 0.1s; */
+        }
+        .line>span{
+            /* block使span等元素变成块元素，使得长宽等属性生效 inline-block使得按一行排列 */
+            display: inline-block;
+            width: 35px;
+            height: 3px;
+            background-color: #cccccc
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="imgList"> 
+            <ul>
+                <li class="list1"><img src="http://p1.music.126.net/I1YJ0IxMFA2T4axSB8x_ww==/109951164026094675.jpg"></li>
+                <li class="list2"><img src="http://p1.music.126.net/-nqQjt2prxV5A9fBJ2jAaw==/109951164024920036.jpg"></li>
+                <li class="list3"><img src="http://p1.music.126.net/Jum4m5N0y6nk3BXH61GuNw==/109951164024899827.jpg"></li>
+                <li class="list4"><img src="http://p1.music.126.net/x1vQ0fPrkP7aCn3rsZEyZg==/109951164024849874.jpg"></li>
+                <li class="list5"><img src="http://p1.music.126.net/IJcNdTuvMy4TI3iIC-HWCw==/109951164026293665.jpg"></li>
+                <li class="list6"><img src="http://p1.music.126.net/6lkxhEbBSPEJZcJAntc3Gw==/109951164022415296.jpg"></li>
+            </ul>
+        </div>
+        <div class="line">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="btnLeft">《</div>
+        <div class="btnRight">》</div>
+    </div>
+    <!-- 1 实现按钮颜色
+        1.1 确定给哪个按钮加一个颜色  index 默认为0
+        1.2 找到按钮元素
+        1.3 先给当前所有的span加一个灰色
+        1,4 根据当前的index值所指向的按钮设定绿色。 -->
+        <script type="text/javascript">
+        // 定义一个变量指向内存空间的一个位置
+            var index=0;
+             // 下面设置一个节流阀，防止连续点击，flag为true的时候才能点击有效
+             var flage=true;
+            // 找到当前按钮  ！新的选取标签的方式：
+            var aSpan=document.querySelectorAll("span"); 
+            //  现在给所有span添加灰色，使用到具有复用性的函数function()
+            function setspanbColor(){
+        
+                for(i=0;i<aSpan.length;i++){
+                    // 所有的元素设置成灰色
+                    aSpan[i].style.backgroundColor="#ccc";
+                }
+                // 当前元素设置绿色
+                aSpan[index].style.backgroundColor="#45c17c";
+                // 显示业务的作用对象是否正确
+                console.log(aSpan[index]);
+            }
+            setspanbColor();
+            // 使用数组方法将所有Class名字存起来，将名字按改变的顺序付给Li
+            var aLiName=["list1","list2","list3","list4","list5","list6"];
+            var aLi=document.querySelectorAll("li");
+            function nextPic(){
+                if (flage == true) {
+                    flage = false
+            //   先把最后一个名字塞到第一个的位置里面 unshift代表往数组的第一个位置添加一个值.
+            aLiName.unshift(aLiName[5]);//现在数组里面有7个值
+            aLiName.pop();//删除最后一个值
+            for(var i=0;i<aLi.length;i++){
+                aLi[i].setAttribute("class",aLiName[i]);
+            }
+            index++;
+            if(index===6){
+                index=0;
+            }
+            setspanbColor(); 
+            }
+              // 设置1s后将flag改成true(动画延迟0.8s)
+              setTimeout(function(){
+              flage=true;
+              },1000)
+            };
+            var bRight=document.querySelector(".btnRight");
+            bRight.onclick=nextPic;//右按钮点击的时候向下翻页
+            function prePic(){
+                aLiName.push(aLiName[0]);//将第一个放在最后一个位置里，此时有7个值
+                aLiName.shift(aLiName[0]);//删除一个变成六个
+                for(i=0;i<aLi.length;i++){
+                    aLi[i].setAttribute("class",aLiName[i]);
+                }
+                index--;
+                if(index===-1){
+                    index=5
+                }
+                setspanbColor();
+            }
+            prePic();
+            var bLeft=document.querySelector(".btnLeft");
+            bLeft.onclick=prePic;
+        </script>
+</body>
+</html>

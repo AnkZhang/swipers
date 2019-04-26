@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        .view{
+            width: 560px;
+            height: 300px;
+            margin: 100px auto;
+            position: relative;
+        }
+        ul{
+            width: 100%;
+            height: 100%;
+            list-style: none;
+            /* totate3d的前三个值代表XYZ三个方向旋转的矢量値，0~1之间取值 */
+            /* transform: rotate3d(1,1,0,-30deg); */
+            /* 保持3d旋转之后的效果 */
+            transform-style: preserve-3d;
+        }
+        ul>li{
+            width: 20%;
+            height: 100%;
+            /* background-color: #ccc; */
+            float: left;
+            position: relative;
+            /* 为li也设置保持3d旋转效果  该属性为父元素设置表示子元素均以3D形式呈现 */
+            transform-style: preserve-3d; 
+            transition: transform 0.5s;
+        }
+        ul>li>span{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0px;
+            right: 0px;
+        }
+        ul>li>span:nth-of-type(1){
+            background: url(images/q1.jpg);
+            /* 因为没有进行旋转，所以看起来没有变化 现在为ul设置旋转 */
+            transform: translateZ(150px);
+        }
+        ul>li>span:nth-of-type(2){
+            background: url(images/q2.jpg);
+            /* 因为没有进行旋转，所以看起来没有变化 现在为ul设置旋转 */
+            transform: translateY(-150px) rotateX(90deg);
+        }
+        ul>li>span:nth-of-type(3){
+            background: url(images/q3.jpg);
+            /* 因为没有进行旋转，所以看起来没有变化 现在为ul设置旋转 */
+            transform: translateZ(-150px) rotateX(180deg);
+        }
+        ul>li>span:nth-of-type(4){
+            background: url(images/q4.jpg);
+            /* 因为没有进行旋转，所以看起来没有变化 现在为ul设置旋转 */
+            transform: translateY(150px) rotateX(-90deg);
+        }
+        ul>li:nth-of-type(2) >span{
+            background-position: -100% 0; 
+        }
+        ul>li:nth-of-type(3) >span{
+            background-position: -200% 0; 
+        }
+        ul>li:nth-of-type(4) >span{
+            background-position: -300% 0; 
+        }
+        ul>li:nth-of-type(5) >span{
+            background-position: -400% 0; 
+        }
+        .pre,.next{
+            width: 30px;
+            height: 60px;
+            display: block;
+            text-align: center;
+            line-height: 60px;
+            position:absolute;
+            top: 50%;
+            margin-top: -30px;
+            text-decoration: none;
+            font-size: 40px;
+            background-color:  rgba(0,0,0,.5);
+        }
+        .pre{
+            left: 0px;
+            color:#fff;
+        }
+        .next{
+            right: 0px;
+            color:#fff;
+        }
+        .showNav {
+            position: absolute;
+            right: 10px;
+            bottom: 5px;
+            text-align: center;
+            width: 120px;
+            height: 20px;
+            line-height: 20px;
+            font-size: 16px;
+        }
+        .showNav span {
+            cursor: pointer;
+            display: block;
+            float: left;
+            width: 20px;
+            height: 20px;
+            background-color: rgb(235, 160, 126);
+            color: #fff;
+            margin-left: 2px;
+        }
+        .showNav .active {
+            background-color: rgb(197, 107, 5)
+        }
+    </style>
+</head>
+<body>
+    <div class="view">
+        <ul>
+            <li>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </li>
+            <li>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </li>
+            <li>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </li>
+            <li>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </li>
+            <li>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </li>
+        </ul>
+        <a href="#" class="pre"><</a>
+        <a href="#" class="next">></a>
+        <!-- 下面是按钮布局 -->
+        <div class="showNav">
+            <span class="active">1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+        </div>
+    </div>
+    <!-- 下面用jQuery来写轮播事件  先引入源文件-->
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script>
+        $(function(){
+            // 定义图片索引
+            var index=0;
+            // 下面设置一个节流阀，防止连续点击，flag为true的时候才能点击有效
+            var flage=true;
+            // 设置下一张按钮的事件
+            $(".next").on("click",function(){
+                if(flage==true){
+                flage=false;
+                index--;
+                    // 下一张指的是所有组li元素绕X轴旋转90度   而且要有不一样的切割
+                    // 效果 所以加上渐进的延迟时间：
+                $("li").each(function(key,value){
+                    // 为每个li元素修改以下两个属性值
+                    $(this).css({
+                        // index的添加使得每个li元素转了相同的角度
+                        "transform": "rotateX("+(index*90)+"deg)",
+                        "transition-delay":(key*0.2)+"s"
+                    });
+                });
+                // 设置1s后将flag改成true(动画延迟0.8s)
+                setTimeout(function(){
+                    flage=true;
+                },1000)
+            }
+                
+            });
+            $(".pre").on("click",function(){
+                if(flage==true){
+                flage=false;
+                index++;
+                    // 下一张指的是所有组li元素绕X轴旋转90度   而且要有不一样的切割
+                    // 效果 所以加上渐进的延迟时间：
+                $("li").each(function(key,value){
+                    // 为每个li元素修改以下两个属性值
+                    $(this).css({
+                        // index的添加使得每个li元素转了相同的角度
+                        "transform": "rotateX("+(index*90)+"deg)",
+                        "transition-delay":(key*0.2)+"s"
+                    });
+                });
+                // 设置1s后将flag改成true(动画延迟0.8s)
+                setTimeout(function(){
+                    flage=true;
+                },2000)
+            }
+            });
+            // var timer = null;  //定时器返回值用于关闭定时器
+            var iNow = 0; // 正在展示的图片的索引值
+            timer = setInterval(function() {
+                index --;
+                iNow++;
+                if (iNow > $(".showNav span").length-1) {
+                    iNow = 0
+                };
+                $("li").each(function(key,value){
+                    // 为每个li元素修改以下两个属性值
+                    $(this).css({
+                        // index的添加使得每个li元素转了相同的角度
+                        "transform": "rotateX("+(index*90)+"deg)",
+                        "transition-delay":(key*0.2)+"s"
+                    });
+                });
+                $(".showNav span").eq(iNow).addClass("active").siblings().removeClass("active");
+            },5000)
+        });
+    </script>
+</body>
+</html>
